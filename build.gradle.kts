@@ -83,6 +83,13 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+    // Apache Kafka
+    implementation("org.springframework.kafka:spring-kafka:3.2.0")
+
+    //JASPER
+    implementation("net.sf.jasperreports:jasperreports-fonts:6.17.0")
+    implementation("net.sf.jasperreports:jasperreports:6.17.0")
 }
 
 tasks.withType<Test> {

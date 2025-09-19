@@ -1,0 +1,74 @@
+package uz.consortgroup.certificate_service.entity;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
+import lombok.*;
+import uz.consortgroup.certificate_service.constant.CertificateTemplate;
+import uz.consortgroup.certificate_service.constant.TableName;
+import uz.consortgroup.core.api.v1.dto.user.enumeration.ForumAccessType;
+
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.UUID;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode
+@Entity
+@Builder
+@Table(name = TableName.certificate, indexes = {
+        @Index(name = "idx_user_id", columnList = "user_id"),
+        @Index(name = "idx_reg_number", columnList = "reg_number"),
+        @Index(name = "idx_certificate_course_id", columnList = "course_id")
+})
+public class Certificate {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+
+    @Column(name = "serial_number", nullable = false, unique = true)
+    private String serialNumber;
+
+    @Column(name = "course_id", nullable = false)
+    private UUID courseId;
+
+    @Column(name = "listener_id", nullable = false)
+    private UUID listenerId;
+
+    @Column(name = "score", nullable = false)
+    private Double score;
+
+    @Column(name = "issued_date", nullable = false, updatable = false)
+    private Instant issuedDate;
+
+    @Column(name = "expire_date")
+    private Instant expiryDate;
+
+    @Column(name = "certificate_template")
+    private CertificateTemplate certificateTemplate;
+
+    @Column(name = "upload_path")
+    private String uploadPath;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Instant createdAt;
+
+    @Column(name = "created_by", updatable = false)
+    private String createdBy;
+
+    @Column(name = "last_modified_at")
+    private Instant lastModifiedAt;
+
+    @Column(name = "last_modified_by")
+    private String lastModifiedBy;
+
+    @PrePersist
+    public void onCreate() {
+        this.issuedDate = Instant.now();
+        this.createdAt = Instant.now();
+    }
+}
