@@ -31,3 +31,14 @@ spring:
     redis:
       host: localhost
       port: 6388
+
+eureka:
+  client:
+    enabled: false
+
+kafka:
+  certificate-issuance: certificate-issuance-topic
+
+jasper:
+  report-template-directories:
+    reportsDir: classpath:templates/

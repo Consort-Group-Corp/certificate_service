@@ -21,8 +21,8 @@ import java.util.UUID;
 @Entity
 @Builder
 @Table(name = TableName.certificate, indexes = {
-        @Index(name = "idx_user_id", columnList = "user_id"),
-        @Index(name = "idx_reg_number", columnList = "reg_number"),
+        @Index(name = "idx_user_id", columnList = "listener_id"),
+        @Index(name = "idx_reg_number", columnList = "serial_number"),
         @Index(name = "idx_certificate_course_id", columnList = "course_id")
 })
 public class Certificate {
