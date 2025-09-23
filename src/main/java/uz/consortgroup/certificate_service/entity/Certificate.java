@@ -23,11 +23,16 @@ import java.util.UUID;
 @Table(name = TableName.certificate, indexes = {
         @Index(name = "idx_user_id", columnList = "listener_id"),
         @Index(name = "idx_reg_number", columnList = "serial_number"),
-        @Index(name = "idx_certificate_course_id", columnList = "course_id")
-})
+        @Index(name = "idx_certificate_course_id", columnList = "course_id")},
+        uniqueConstraints = {
+        @UniqueConstraint(
+            name = "uk_certificate_course_listener_date",
+            columnNames = {"course_id", "listener_id", "issued_date"})}
+)
 public class Certificate {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(columnDefinition = "uuid")
     private UUID id;
 
     @Column(name = "serial_number", nullable = false, unique = true)

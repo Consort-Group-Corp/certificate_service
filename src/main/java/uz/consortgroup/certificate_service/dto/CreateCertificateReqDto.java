@@ -7,17 +7,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import uz.consortgroup.certificate_service.constant.CertificateTemplate;
 
+import java.util.UUID;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateCertificateReqDto {
     @NotNull(message = "Listener id is required")
     @JsonProperty("listener_id")
-    private String listenerId;
+    private UUID listenerId;
 
     @NotNull(message = "Course id is required")
     @JsonProperty("course_id")
-    private String courseId;
+    private UUID courseId;
 
     @NotNull(message = "Score id is required")
     @JsonProperty("score")
