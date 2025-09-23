@@ -28,7 +28,7 @@ public class FileServiceImpl implements FileService {
     private String reportsDir;
 
     @Override
-    public byte[] generateCertificate(CertificateData certificateData, UUID certId, String) {
+    public byte[] generateCertificate(CertificateData certificateData, UUID certId) {
         try {
             JRBeanCollectionDataSource dataSource =
                     new JRBeanCollectionDataSource(Collections.singletonList(certificateData));
