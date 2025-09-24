@@ -1,16 +1,11 @@
 package uz.consortgroup.certificate_service.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 import uz.consortgroup.certificate_service.constant.CertificateTemplate;
 import uz.consortgroup.certificate_service.constant.TableName;
-import uz.consortgroup.core.api.v1.dto.user.enumeration.ForumAccessType;
 
 import java.time.Instant;
-import java.time.LocalDate;
-import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -20,7 +15,8 @@ import java.util.UUID;
 @EqualsAndHashCode
 @Entity
 @Builder
-@Table(name = TableName.certificate, indexes = {
+@Table(name = TableName.certificate,
+        schema = "certificate_schema", indexes = {
         @Index(name = "idx_user_id", columnList = "listener_id"),
         @Index(name = "idx_reg_number", columnList = "serial_number"),
         @Index(name = "idx_certificate_course_id", columnList = "course_id")},
@@ -31,7 +27,6 @@ import java.util.UUID;
 )
 public class Certificate {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(columnDefinition = "uuid")
     private UUID id;
 
@@ -41,8 +36,14 @@ public class Certificate {
     @Column(name = "course_id", nullable = false)
     private UUID courseId;
 
+    @Column(name = "course_name", nullable = false)
+    private String courseName;
+
     @Column(name = "listener_id", nullable = false)
     private UUID listenerId;
+
+    @Column(name = "listener_full_name", nullable = false)
+    private String listenerFullName;
 
     @Column(name = "score", nullable = false)
     private Double score;

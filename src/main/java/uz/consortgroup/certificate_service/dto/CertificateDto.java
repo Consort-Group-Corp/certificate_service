@@ -10,11 +10,14 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-public class CertificateData {
-    private String fullName;
-    private String courseName;
-    private Double score;
+public class CertificateDto {
+    private UUID certId;
     private String serialNumber;
+    private Double score;
+    private UUID listenerId;
+    private String listenerFullName;
+    private UUID courseId;
+    private String courseName;
     private String issuedDate;
     private String uploadPath;
     private CertificateTemplate certificateTemplate;

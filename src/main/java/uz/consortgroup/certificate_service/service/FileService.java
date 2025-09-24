@@ -1,10 +1,9 @@
 package uz.consortgroup.certificate_service.service;
 
-import uz.consortgroup.certificate_service.dto.CertificateData;
-import uz.consortgroup.certificate_service.dto.CreateCertificateReqDto;
+import uz.consortgroup.certificate_service.dto.CertificateDto;
 
 import java.util.UUID;
 
 public interface FileService {
-    byte[] generateCertificate(CertificateData certificateData, UUID certId);
+    boolean generateCertificate(CertificateDto certificateDto, UUID certId);
 }

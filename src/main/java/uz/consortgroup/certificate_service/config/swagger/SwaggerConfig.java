@@ -29,11 +29,11 @@ public class SwaggerConfig {
                 .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
                 .info(new Info()
                         .title("User Service API")
-                        .description("API документация для User Service")
+                        .description("API документация для Certificate Service")
                         .version("v1.0")
                         .license(new License().name("Apache 2.0").url("https://springdoc.org")))
                 .externalDocs(new ExternalDocumentation()
                         .description("GitHub репозиторий")
-                        .url("https://github.com/Consort-Group-Corp/user_service"));
+                        .url("https://github.com/Consort-Group-Corp/course_service"));
     }
 }

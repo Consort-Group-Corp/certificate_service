@@ -16,10 +16,10 @@ import java.util.Map;
 
 @Configuration
 public class KafkaProducerConfig {
-    @Value("${kafka.bootstrap-servers}")
+//    @Value("${kafka.bootstrap-servers}")
     private String servers;
 
-    @Bean
+//    @Bean
     public ProducerFactory<String, Object> producerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, servers);
@@ -28,19 +28,19 @@ public class KafkaProducerConfig {
         props.put(ProducerConfig.ACKS_CONFIG, "all");
         props.put(JsonSerializer.ADD_TYPE_INFO_HEADERS, true);
         props.put(JsonSerializer.TYPE_MAPPINGS,
-                "user_registered:uz.consortgroup.userservice.event.user.UserRegisteredEvent," +
-                "verification_code_resent:uz.consortgroup.userservice.event.user.VerificationCodeResentEvent," +
-                        "user_profile_update:uz.consortgroup.userservice.event.user.UserProfileUpdateEvent," +
-                        "password_reset_requested:uz.consortgroup.userservice.event.user.PasswordResetRequestedEvent," +
-                        "super-admin-action:uz.consortgroup.userservice.event.admin.SuperAdminActionEvent," +
-                        "mentor-action:uz.consortgroup.userservice.event.mentor.MentorActionEvent," +
-                        "course-group:uz.consortgroup.userservice.event.course_group.CourseGroupOpenedEvent," +
-                        "hr-action:uz.consortgroup.userservice.event.hr.HrActionEvent");
+                "user_registered:uz.consortgroup.courseservice.event.user.UserRegisteredEvent," +
+                "verification_code_resent:uz.consortgroup.courseservice.event.user.VerificationCodeResentEvent," +
+                        "user_profile_update:uz.consortgroup.courseservice.event.user.UserProfileUpdateEvent," +
+                        "password_reset_requested:uz.consortgroup.courseservice.event.user.PasswordResetRequestedEvent," +
+                        "super-admin-action:uz.consortgroup.courseservice.event.admin.SuperAdminActionEvent," +
+                        "mentor-action:uz.consortgroup.courseservice.event.mentor.MentorActionEvent," +
+                        "course-group:uz.consortgroup.courseservice.event.course_group.CourseGroupOpenedEvent," +
+                        "hr-action:uz.consortgroup.courseservice.event.hr.HrActionEvent");
 
         return new DefaultKafkaProducerFactory<>(props);
     }
 
-    @Bean("kafkaTemplate")
+//    @Bean("kafkaTemplate")
     public KafkaTemplate<String, Object> kafkaTemplate(@Qualifier("producerFactory") ProducerFactory<String, Object> producerFactory) {
         return new KafkaTemplate<>(producerFactory);
     }

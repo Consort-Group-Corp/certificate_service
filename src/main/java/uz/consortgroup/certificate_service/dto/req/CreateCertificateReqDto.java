@@ -1,4 +1,4 @@
-package uz.consortgroup.certificate_service.dto;
+package uz.consortgroup.certificate_service.dto.req;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotNull;

@@ -24,25 +24,25 @@ import java.util.Map;
 @Configuration
 @Slf4j
 public class KafkaConsumerConfig {
-    @Value("${kafka.consumer-group-id}")
+//    @Value("${kafka.consumer-group-id}")
     private String groupId;
 
-    @Value("${kafka.bootstrap-servers}")
+//    @Value("${kafka.bootstrap-servers}")
     private String servers;
 
-    @Value("${kafka.session-timeout-ms}")
+//    @Value("${kafka.session-timeout-ms}")
     private String sessionTimeoutMs;
 
-    @Value("${kafka.max-partition-fetch-bytes}")
+//    @Value("${kafka.max-partition-fetch-bytes}")
     private String maxPartitionFetchBytes;
 
-    @Value("${kafka.max-poll-records}")
+//    @Value("${kafka.max-poll-records}")
     private String maxPollRecords;
 
-    @Value("${kafka.max-poll-interval-ms}")
+//    @Value("${kafka.max-poll-interval-ms}")
     private String maxPollIntervalMs;
 
-    @Bean
+//    @Bean
     public ConsumerFactory<String, Object> universalConsumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, servers);
@@ -52,12 +52,12 @@ public class KafkaConsumerConfig {
         props.put(ErrorHandlingDeserializer.KEY_DESERIALIZER_CLASS, StringDeserializer.class);
         props.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, JsonDeserializer.class);
 
-        props.put(JsonDeserializer.TRUSTED_PACKAGES, "uz.consortgroup.userservice.event");
+        props.put(JsonDeserializer.TRUSTED_PACKAGES, "uz.consortgroup.courseservice.event");
 
         props.put(JsonDeserializer.USE_TYPE_INFO_HEADERS, true);
 
-        props.put(JsonSerializer.TYPE_MAPPINGS, "course-purchased:uz.consortgroup.userservice.event.coursepurchased.CoursePurchasedEvent," +
-                                                "course-forum-group:uz.consortgroup.userservice.event.course_group.CourseForumGroupCreatedEvent");
+        props.put(JsonSerializer.TYPE_MAPPINGS, "course-purchased:uz.consortgroup.courseservice.event.coursepurchased.CoursePurchasedEvent," +
+                                                "course-forum-group:uz.consortgroup.courseservice.event.course_group.CourseForumGroupCreatedEvent");
         props.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, sessionTimeoutMs);
         props.put(ConsumerConfig.MAX_PARTITION_FETCH_BYTES_CONFIG, maxPartitionFetchBytes);
         props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, maxPollRecords);
@@ -68,7 +68,7 @@ public class KafkaConsumerConfig {
         return new DefaultKafkaConsumerFactory<>(props);
     }
 
-    @Bean
+//    @Bean
     public ConcurrentKafkaListenerContainerFactory<String, Object> universalKafkaListenerContainerFactory(
             @Qualifier("universalConsumerFactory") ConsumerFactory<String, Object> consumerFactory) {
 
@@ -96,7 +96,7 @@ public class KafkaConsumerConfig {
         return factory;
     }
 
-    @Bean
+//    @Bean
     public DefaultErrorHandler kafkaErrorHandler() {
         DefaultErrorHandler handler = new DefaultErrorHandler(
                 (record, exception) -> {

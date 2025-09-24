@@ -8,47 +8,44 @@ import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import uz.consortgroup.certificate_service.constant.CertificateTemplate;
-import uz.consortgroup.certificate_service.dto.CertificateData;
-import uz.consortgroup.certificate_service.dto.CreateCertificateReqDto;
+import uz.consortgroup.certificate_service.dto.CertificateDto;
 import uz.consortgroup.certificate_service.service.FileService;
 
 import java.io.*;
 import java.net.URL;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Slf4j
 @Service
 public class FileServiceImpl implements FileService {
-
+    private static final String CERTIFICATE_DIR = "src/main/resources/certificates/";
     private final ResourceLoader resourceLoader = new DefaultResourceLoader();
 
     @Value("${jasper.report-template-directories.reportsDir}")
     private String reportsDir;
 
     @Override
-    public byte[] generateCertificate(CertificateData certificateData, UUID certId) {
+    public boolean generateCertificate(CertificateDto certificateDto, UUID certId) {
         try {
             JRBeanCollectionDataSource dataSource =
-                    new JRBeanCollectionDataSource(Collections.singletonList(certificateData));
+                    new JRBeanCollectionDataSource(Collections.singletonList(certificateDto));
 
-            // Фон сертификата (certificate(BLUE).jpg
+            // Фон сертификата
             URL BACKGROUND_IMAGE_URL = this.getClass()
                     .getClassLoader()
-                    .getResource("image/certificate(" + certificateData.getCertificateTemplate().name() + ").jpg");
+                    .getResource("image/certificate(" + certificateDto.getCertificateTemplate().name() + ").jpg");
 
-            if (BACKGROUND_IMAGE_URL == null || certificateData.getCertificateTemplate().equals(CertificateTemplate.UNKNOWN)) {
+            if (BACKGROUND_IMAGE_URL == null || certificateDto.getCertificateTemplate().equals(CertificateTemplate.UNKNOWN)) {
                 throw new FileNotFoundException("Файл фона certificate.jpg не найден в resources/image/");
             }
 
             // Параметры для Jasper
             Map<String, Object> params = new HashMap<>();
             params.put("BACKGROUND_IMAGE", BACKGROUND_IMAGE_URL.toString());
-            params.put("CERTIFICATE_NUMBER", certificateData.getSerialNumber());
-            params.put("RECIPIENT_NAME", certificateData.getFullName());
-            params.put("COURSE_NAME", certificateData.getCourseName());
-            params.put("ISSUE_DATE", certificateData.getIssuedDate());
+            params.put("CERTIFICATE_NUMBER", certificateDto.getSerialNumber());
+            params.put("RECIPIENT_NAME", certificateDto.getListenerFullName());
+            params.put("COURSE_NAME", certificateDto.getCourseName());
+            params.put("ISSUE_DATE", certificateDto.getIssuedDate());
 
             // Компиляция JRXML (certificate.jrxml должен лежать в reportsDir)
             JasperReport jasperReport = JasperCompileManager.compileReport(
@@ -62,9 +59,9 @@ public class FileServiceImpl implements FileService {
             byte[] bytes = byteArrayOutputStream.toByteArray();
 
             // Сохранение PDF
-            saveToFile(bytes, certificateData.getUploadPath());
+            saveToFile(bytes, certificateDto.getUploadPath());
 
-            return bytes;
+            return true;
 
         } catch (Exception e) {
             log.error("Ошибка при генерации сертификата", e);
@@ -79,14 +76,13 @@ public class FileServiceImpl implements FileService {
     }
 
     private void saveToFile(byte[] bytes, String fileName) throws IOException {
-        File dir = new File("src/main/resources/certificates");
+        File dir = new File("src/main/resources/");
         if (!dir.exists() && !dir.mkdirs()) {
             log.warn("Не удалось создать директорию: {}", dir.getAbsolutePath());
         }
         File file = new File(dir, fileName);
         try (FileOutputStream fos = new FileOutputStream(file)) {
             fos.write(bytes);
-            log.info("✅ Сертификат сохранён: {}", file.getAbsolutePath());
         }
     }
 }

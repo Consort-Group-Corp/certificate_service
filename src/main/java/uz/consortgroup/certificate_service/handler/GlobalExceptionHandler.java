@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import uz.consortgroup.certificate_service.exception.CertificateNotFoundException;
 import uz.consortgroup.certificate_service.exception.CourseNotFoundException;
 import uz.consortgroup.certificate_service.exception.ListenerNotFoundException;
 
@@ -31,5 +32,12 @@ public class GlobalExceptionHandler {
         log.error("CourseNotFoundException: ", ex);
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(new ErrorResponse(HttpStatus.NOT_FOUND.value(), "Course not found", ex.getMessage()));
+    }
+
+    @ExceptionHandler(CertificateNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleLessonNotFoundException(CertificateNotFoundException ex) {
+        log.error("CertificateNotFoundException: ", ex);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ErrorResponse(HttpStatus.NOT_FOUND.value(), "Certificate not found", ex.getMessage()));
     }
 }
