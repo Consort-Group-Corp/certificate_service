@@ -1,10 +1,11 @@
 package uz.consortgroup.certificate_service.service.impl;
 
 import jakarta.ws.rs.core.HttpHeaders;
-import org.apache.commons.collections.list.TransformedList;
+import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import uz.consortgroup.certificate_service.constant.CertificateTemplate;
@@ -33,21 +34,13 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class CertificateServiceImpl implements CertificateService {
     private final FileService fileService;
     private final CourseService courseService;
     private final ListenerService listenerService;
-    private final CertificateRepository repository;
     private final CertificateMapper certificateMapper;
-
-    public CertificateServiceImpl(FileService fileService, CourseService courseService, ListenerService listenerService,
-                                  CertificateRepository repository, CertificateMapper certificateMapper) {
-        this.fileService = fileService;
-        this.courseService = courseService;
-        this.listenerService = listenerService;
-        this.repository = repository;
-        this.certificateMapper = certificateMapper;
-    }
+    private final CertificateRepository certificateRepository;
 
     @Override
     public CertificateDto create(CreateCertificateReqDto req) {
@@ -55,7 +48,7 @@ public class CertificateServiceImpl implements CertificateService {
 //        CourseResponseDto course = courseService.getCourseTitleById(req.getCourseId());
 
         UserShortInfoResponseDto listener = new UserShortInfoResponseDto(UUID.randomUUID(), "Ali",
-                "Aliyev", "Otasi ismi", UserRole.STUDENT, "student");
+                "Aliyev", "Sharipovich", UserRole.STUDENT, "student");
         CourseResponseDto course = CourseResponseDto.builder()
                 .id(UUID.randomUUID())
                 .courseStatus(CourseStatus.ACTIVE)
@@ -71,7 +64,7 @@ public class CertificateServiceImpl implements CertificateService {
         UUID certId = UUID.randomUUID();
         String serialNumber = generateSerialNumber(certId);
         String issuedDate = generateIssuedDate();
-        String uploadPath = "certificates/" + generateFileName(certId.toString());
+        String uploadPath = generateFileName(certId.toString());
 
         CertificateDto dto = CertificateDto.builder()
                 .certId(certId)
@@ -89,7 +82,7 @@ public class CertificateServiceImpl implements CertificateService {
         boolean success = fileService.generateCertificate(dto, certId);
         if (success) {
             Certificate entity = certificateMapper.toEntity(dto);
-            repository.save(entity);
+            certificateRepository.save(entity);
             return dto;
         }
         return null;
@@ -97,28 +90,30 @@ public class CertificateServiceImpl implements CertificateService {
 
     @Override
     public ResponseEntity<Object> downloadById(UUID id) {
-        Certificate certificate = repository.findById(id)
+        Certificate certificate = certificateRepository.findById(id)
                 .orElseThrow(() -> new CertificateNotFoundException("Certificate not found by id:" + id));
 
-        String uploadPath = certificate.getUploadPath();
-        try {
-            ClassPathResource resource = new ClassPathResource(uploadPath);
-            if (!resource.exists()) {
-                throw new CertificateNotFoundException("File not found: " + uploadPath);
-            }
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_TYPE, "application/pdf")
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
-                    .body(resource);
-        } catch (Exception e) {
-            throw new RuntimeException("Error while downloading certificate", e);
-        }
+        FileSystemResource resource = fileService.download(certificate);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFile().getName() + "\"")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(resource);
+    }
+
+    @Override
+    public Boolean checkUniqueness(String serialNumber) {
+        List<Certificate> certificates = certificateRepository.findAllBySerialNumber(serialNumber);
+        if (certificates.isEmpty())
+            throw new CertificateNotFoundException("Certificate not found by serialNumber:" + serialNumber);
+
+        if (certificates.size() == 1)
+            return Boolean.TRUE;
+        return Boolean.FALSE;
     }
 
     @Override
     public Page<CertificateDto> getCertificates(CertificateFilter filter, Pageable pageable) {
-        Page<Certificate> page = repository.findAll(CertificateSpecification.withFilters(filter), pageable);
-
+        Page<Certificate> page = certificateRepository.findAll(CertificateSpecification.withFilters(filter), pageable);
         return page.map(certificateMapper::toDto);
     }
 
@@ -136,7 +131,7 @@ public class CertificateServiceImpl implements CertificateService {
     }
 
     private String generateSerialNumber(UUID certId) {
-        return "AA-" + certId.toString().substring(0, 8).toUpperCase();
+        return "AA-" + certId.toString().substring(0, 8);
     }
 
     private String generateFileName(String certId) {

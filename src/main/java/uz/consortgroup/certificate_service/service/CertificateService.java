@@ -12,6 +12,6 @@ import java.util.UUID;
 public interface CertificateService {
     CertificateDto create(CreateCertificateReqDto req);
     ResponseEntity<Object> downloadById(UUID id);
-
+    Boolean checkUniqueness(String serialNumber);
     Page<CertificateDto> getCertificates(CertificateFilter filter, Pageable pageable);
 }

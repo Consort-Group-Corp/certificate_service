@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import uz.consortgroup.certificate_service.constant.CertificateTemplate;
 
 import java.util.UUID;
 
@@ -24,8 +23,4 @@ public class CreateCertificateReqDto {
     @NotNull(message = "Score id is required")
     @JsonProperty("score")
     private Double score;
-
-    @NotNull(message = "Certificate Template is required")
-    @JsonProperty("certificate_template")
-    private CertificateTemplate certificateTemplate;
 }

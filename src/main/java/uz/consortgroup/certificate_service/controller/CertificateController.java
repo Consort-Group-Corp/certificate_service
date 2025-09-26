@@ -40,7 +40,14 @@ public class CertificateController {
         return certificateService.downloadById(id);
     }
 
+    @PostMapping("/check")
+    @Operation(summary = "Check uniqueness certificate")
+    public ResponseEntity<Boolean> checkUniqueness(@RequestParam String serialNumber) {
+        return ResponseEntity.ok().body(certificateService.checkUniqueness(serialNumber));
+    }
+
     @GetMapping
+    @Operation(summary = "List of certificates by filtering")
     public ResponseEntity<Map<String, Object>> getCertificates(
             @RequestParam(required = false) String fullName,
             @RequestParam(required = false) String courseName,

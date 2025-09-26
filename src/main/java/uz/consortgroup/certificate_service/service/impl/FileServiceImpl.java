@@ -5,10 +5,14 @@ import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import uz.consortgroup.certificate_service.constant.CertificateTemplate;
 import uz.consortgroup.certificate_service.dto.CertificateDto;
+import uz.consortgroup.certificate_service.entity.Certificate;
+import uz.consortgroup.certificate_service.exception.CertificateNotFoundException;
+import uz.consortgroup.certificate_service.exception.FileGeneratingException;
 import uz.consortgroup.certificate_service.service.FileService;
 
 import java.io.*;
@@ -18,11 +22,12 @@ import java.util.*;
 @Slf4j
 @Service
 public class FileServiceImpl implements FileService {
-    private static final String CERTIFICATE_DIR = "src/main/resources/certificates/";
-    private final ResourceLoader resourceLoader = new DefaultResourceLoader();
-
+    @Value("${cert-directory}")
+    private String fileDirectory;
     @Value("${jasper.report-template-directories.reportsDir}")
     private String reportsDir;
+
+    private final ResourceLoader resourceLoader = new DefaultResourceLoader();
 
     @Override
     public boolean generateCertificate(CertificateDto certificateDto, UUID certId) {
@@ -65,8 +70,20 @@ public class FileServiceImpl implements FileService {
 
         } catch (Exception e) {
             log.error("Ошибка при генерации сертификата", e);
-            throw new RuntimeException("Ошибка при генерации сертификата", e);
+            throw new FileGeneratingException("Ошибка при генерации сертификата");
         }
+    }
+
+    @Override
+    public FileSystemResource download(Certificate certificate) {
+        String uploadPath = fileDirectory + certificate.getUploadPath();
+        File file = new File(uploadPath);
+
+        if (!file.exists()) {
+            throw new CertificateNotFoundException("File not found: " + uploadPath);
+        }
+
+        return new FileSystemResource(file);
     }
 
     private ByteArrayOutputStream exportPDF(JasperPrint jasperPrint) throws JRException {
@@ -76,7 +93,7 @@ public class FileServiceImpl implements FileService {
     }
 
     private void saveToFile(byte[] bytes, String fileName) throws IOException {
-        File dir = new File("src/main/resources/");
+        File dir = new File(fileDirectory);
         if (!dir.exists() && !dir.mkdirs()) {
             log.warn("Не удалось создать директорию: {}", dir.getAbsolutePath());
         }

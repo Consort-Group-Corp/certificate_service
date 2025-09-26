@@ -29,7 +29,7 @@ spring:
 
   data:
     redis:
-      host: ${REDIS_COURSE_HOST:consort-redis-course-service}
+      host: ${REDIS_COURSE_HOST:consort-redis-certificate-service}
       port: ${REDIS_COURSE_PORT:6379}
       timeout: 3000ms
       lettuce:
@@ -49,7 +49,7 @@ spring:
   kafka:
     bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:"consort-kafka:9092"}
     consumer:
-      group-id: ${SPRING_KAFKA_CONSUMER_GROUP_ID:course-service-group}
+      group-id: ${SPRING_KAFKA_CONSUMER_GROUP_ID:certificate-service-group}
       auto-offset-reset: latest
       max-poll-records: ${SPRING_KAFKA_CONSUMER_MAX_POLL_RECORDS:500}
       properties:
@@ -110,6 +110,8 @@ management:
 jasper:
   report-template-directories:
     reportsDir: classpath:templates/
+
+cert-directory: /var/www/certificates/
 
 springdoc:
   api-docs:

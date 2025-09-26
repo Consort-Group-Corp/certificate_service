@@ -56,6 +56,8 @@ jasper:
   report-template-directories:
     reportsDir: classpath:templates/
 
+cert-directory: C:/certificates/
+
 springdoc:
   api-docs:
     enabled: true

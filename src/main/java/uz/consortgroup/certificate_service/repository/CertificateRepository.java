@@ -8,9 +8,11 @@ import org.springframework.stereotype.Repository;
 import uz.consortgroup.certificate_service.entity.Certificate;
 
 
+import java.util.List;
 import java.util.UUID;
 
 @Repository
 public interface CertificateRepository extends JpaRepository<Certificate, UUID> {
     Page<Certificate> findAll(Specification<Certificate> withFilters, Pageable pageable);
+    List<Certificate> findAllBySerialNumber(String serialNumber);
 }
