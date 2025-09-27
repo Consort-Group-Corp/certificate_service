@@ -27,18 +27,6 @@ spring:
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
 
-  data:
-    redis:
-      host: ${REDIS_COURSE_HOST:consort-redis-certificate-service}
-      port: ${REDIS_COURSE_PORT:6379}
-      timeout: 3000ms
-      lettuce:
-        pool:
-          max-active: 8
-          max-idle: 8
-          min-idle: 0
-          max-wait: -1ms
-        shutdown-timeout: 100ms
 
   servlet:
     multipart:
@@ -96,8 +84,6 @@ management:
       show-details: when_authorized
       show-components: when_authorized
   health:
-    redis:
-      enabled: true
     db:
       enabled: true
     defaults:
