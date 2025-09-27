@@ -24,8 +24,6 @@ import java.util.*;
 public class FileServiceImpl implements FileService {
     @Value("${cert-directory}")
     private String fileDirectory;
-    @Value("${jasper.report-template-directories.reportsDir}")
-    private String reportsDir;
 
     private final ResourceLoader resourceLoader = new DefaultResourceLoader();
 
@@ -54,7 +52,7 @@ public class FileServiceImpl implements FileService {
 
             // Компиляция JRXML (certificate.jrxml должен лежать в reportsDir)
             JasperReport jasperReport = JasperCompileManager.compileReport(
-                    resourceLoader.getResource(reportsDir + File.separator + "certificate.jrxml").getInputStream()
+                    this.getClass().getResourceAsStream("/templates/certificate.jrxml")
             );
 
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, dataSource);

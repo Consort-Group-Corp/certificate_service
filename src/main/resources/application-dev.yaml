@@ -93,10 +93,6 @@ management:
     ping:
       enabled: true
 
-jasper:
-  report-template-directories:
-    reportsDir: classpath:templates/
-
 cert-directory: /var/www/certificates/
 
 springdoc:
