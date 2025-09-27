@@ -23,6 +23,9 @@ configurations {
 repositories {
     mavenLocal()
     mavenCentral()
+    maven {
+        url = uri("https://jaspersoft.jfrog.io/artifactory/third-party-ce-artifacts")
+    }
 }
 
 extra["springCloudVersion"] = "2024.0.1"
