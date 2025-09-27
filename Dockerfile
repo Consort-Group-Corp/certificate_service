@@ -1,14 +1,13 @@
-# Используем официальный образ OpenJDK 21
 FROM openjdk:21-jdk-slim
 
-# Устанавливаем рабочую директорию в контейнере
 WORKDIR /app
 
-# Копируем JAR файл из директории сборки в контейнер
+# Установим зависимости для JasperReports (freetype и fontconfig)
+RUN apt-get update && apt-get install -y \
+    fontconfig \
+    libfreetype6 \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY build/libs/*.jar app.jar
 
-# Открываем порт для приложения (если приложение использует порт 8081)
-EXPOSE 8090
-
-# Указываем команду для запуска приложения
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java","-jar","app.jar"]
