@@ -17,6 +17,7 @@ pipeline {
     DOCKER_NETWORK = 'consort-infra_consort-network'
     LOGS_DIR = '/app/logs/certificate-service'
     ENV_FILE = '/var/jenkins_home/.env'
+    UPLOADS_DIR = '/var/www/certificates'
   }
 
   stages {
@@ -103,10 +104,10 @@ pipeline {
             --restart unless-stopped \
             -p ${APP_PORT}:${APP_PORT} \
             -v ${LOGS_DIR}:/app/logs/certificate-service \
-            -v ${CERT_DIR}:/var/www/certificates \
+            -v ${UPLOADS_DIR}:${UPLOADS_DIR} \
             --env-file ${ENV_FILE} \
             -e TZ=Asia/Tashkent \
-            -e LOG_DIR=/app/logs/certificate-service \
+            -e LOG_DIR=${LOGS_DIR} \
             -e SPRING_PROFILES_ACTIVE=dev \
             -e SERVER_PORT=${APP_PORT} \
             -e SPRING_DATASOURCE_URL=jdbc:postgresql://consort-postgres:5432/${POSTGRES_DB} \
@@ -115,7 +116,7 @@ pipeline {
             -e SPRING_KAFKA_BOOTSTRAP_SERVERS=consort-kafka:9092 \
             -e EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://consort-eureka-service:8762/eureka/ \
             -e SECURITY_TOKEN=${SECURITY_TOKEN} \
-              ${IMAGE_TAG}
+            ${IMAGE_TAG}
 
           echo "⌛ Ожидаю readiness ${HEALTH_URL} ..."
           timeout=120
