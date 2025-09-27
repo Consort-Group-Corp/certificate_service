@@ -48,10 +48,6 @@ course:
   service:
     url: http://localhost:8084
 
-jasper:
-  report-template-directories:
-    reportsDir: classpath:templates/
-
 cert-directory: C:/certificates/
 
 springdoc:
