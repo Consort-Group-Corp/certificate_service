@@ -1,0 +1,115 @@
+server:
+  port: 8090
+
+spring:
+  config:
+    import: optional:file:.env[.properties]
+
+  application:
+    name: certificate-service
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/consort_group
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    hikari:
+      maximum-pool-size: 10
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+
+
+  servlet:
+    multipart:
+      max-file-size: 1000MB
+      max-request-size: 1000MB
+      enabled: true
+
+  kafka:
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:"consort-kafka:9092"}
+    consumer:
+      group-id: ${SPRING_KAFKA_CONSUMER_GROUP_ID:certificate-service-group}
+      auto-offset-reset: latest
+      max-poll-records: ${SPRING_KAFKA_CONSUMER_MAX_POLL_RECORDS:500}
+      properties:
+        session.timeout.ms: ${SPRING_KAFKA_CONSUMER_SESSION_TIMEOUT_MS:10000}
+        heartbeat.interval.ms: ${SPRING_KAFKA_CONSUMER_HEARTBEAT_INTERVAL_MS:3000}
+        max.partition.fetch.bytes: ${SPRING_KAFKA_CONSUMER_MAX_PARTITION_FETCH_BYTES:1048576}
+        max.poll.interval.ms: ${SPRING_KAFKA_CONSUMER_MAX_POLL_INTERVAL_MS:300000}
+    producer:
+      acks: all
+      retries: 10
+    properties:
+      metadata.max.age.ms: 30000
+
+
+# Бизнес-топики
+kafka:
+  certificate-issuance: certificate-issuance-topic
+
+user:
+  service:
+    url: ${USER_SERVICE_URL:http://consort-user-service:8081}
+
+course:
+  service:
+    url: ${USER_SERVICE_URL:http://consort-user-service:8084}
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://consort-eureka-service:8762/eureka/}
+  instance:
+    prefer-ip-address: true
+    instance-id: ${HOSTNAME}:${server.port}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: when_authorized
+      show-components: when_authorized
+  health:
+    db:
+      enabled: true
+    defaults:
+      enabled: true
+    diskspace:
+      enabled: true
+    ping:
+      enabled: true
+
+jasper:
+  report-template-directories:
+    reportsDir: classpath:templates/
+
+cert-directory: /var/www/certificates/
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    docExpansion: full
+    defaultModelsExpandDepth: 1
+    defaultModelExpandDepth: 3
+    defaultModelRendering: schema
+    operationsSorter: method
+    tagsSorter: alpha
+    use-root-path: true
+  model-converters:
+    pageable-converter:
+      enabled: true

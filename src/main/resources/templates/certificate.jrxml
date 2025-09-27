@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="certificate" pageWidth="842" pageHeight="595"
+              columnWidth="842" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0"
+              uuid="f9a2b1bb-8a25-4f41-a38b-3e5c71589f42">
+
+    <!-- Параметры -->
+    <parameter name="BACKGROUND_IMAGE" class="java.lang.String"/>
+    <parameter name="RECIPIENT_NAME" class="java.lang.String"/>
+    <parameter name="COURSE_NAME" class="java.lang.String"/>
+    <parameter name="ISSUE_DATE" class="java.lang.String"/>
+    <parameter name="CERTIFICATE_NUMBER" class="java.lang.String"/>
+    <parameter name="DIRECTOR_NAME" class="java.lang.String"/>
+    <parameter name="DEPUTY_NAME" class="java.lang.String"/>
+
+    <!-- Фон -->
+    <background>
+        <band height="595">
+            <image scaleImage="FillFrame">
+                <reportElement x="0" y="0" width="842" height="595"/>
+                <imageExpression><![CDATA[$P{BACKGROUND_IMAGE}]]></imageExpression>
+            </image>
+        </band>
+    </background>
+
+    <!-- Основное содержимое -->
+    <detail>
+        <band height="595">
+<!--        Полное имя получателя -->
+            <textField>
+                <reportElement x="200" y="230" width="450" height="30"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="18" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{RECIPIENT_NAME}]]></textFieldExpression>
+            </textField>
+<!--        Наименование курса -->
+            <textField>
+                <reportElement x="200" y="270" width="450" height="25"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="16"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{COURSE_NAME}]]></textFieldExpression>
+            </textField>
+<!--        Дата выдачи -->
+            <textField>
+                <reportElement x="320" y="468" width="200" height="20"/>
+                <textElement textAlignment="Left">
+                    <font size="12"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{ISSUE_DATE}]]></textFieldExpression>
+            </textField>
+<!--        Номер сертификата-->
+            <textField>
+                <reportElement x="357" y="468" width="250" height="20"/>
+                <textElement textAlignment="Center">
+                    <font size="12"/>
+                </textElement>
+                <textFieldExpression><![CDATA["№ " + $P{CERTIFICATE_NUMBER}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+</jasperReport>

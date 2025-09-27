@@ -47,7 +47,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("org.springframework.boot:spring-boot-starter-security")
+//    implementation("org.springframework.boot:spring-boot-starter-security")
 
     // Feign (REST Clients)
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
@@ -55,6 +55,7 @@ dependencies {
 
     // MapStruct
     implementation("org.mapstruct:mapstruct:1.5.3.Final")
+    implementation("org.jetbrains:annotations:23.0.0")
     annotationProcessor("org.projectlombok:lombok-mapstruct-binding:0.2.0")
     annotationProcessor("org.mapstruct:mapstruct-processor:1.5.3.Final")
 
@@ -83,6 +84,13 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+    // Apache Kafka
+    implementation("org.springframework.kafka:spring-kafka:3.2.0")
+
+    //JASPER
+    implementation("net.sf.jasperreports:jasperreports-fonts:6.17.0")
+    implementation("net.sf.jasperreports:jasperreports:6.17.0")
 }
 
 tasks.withType<Test> {
