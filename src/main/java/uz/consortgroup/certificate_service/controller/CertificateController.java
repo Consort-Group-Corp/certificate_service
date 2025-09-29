@@ -23,7 +23,7 @@ import java.util.UUID;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/certificates")
+@RequestMapping("/api/v1/certificates")
 public class CertificateController {
     private final CertificateService certificateService;
 
@@ -31,7 +31,7 @@ public class CertificateController {
     @Operation(summary = "Generate certificate")
 //    @PreAuthorize("hasAuthority('create certificate')")
     public ResponseEntity<CertificateDto> create(@Valid @RequestBody CreateCertificateReqDto dto) {
-        return ResponseEntity.ok().body(certificateService.create(dto));
+        return ResponseEntity.ok().body(certificateService. create(dto));
     }
 
     @GetMapping("{id}/download")

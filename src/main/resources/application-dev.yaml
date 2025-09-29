@@ -69,7 +69,7 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://consort-eureka-service:8762/eureka/}
+      defaultZone: ${EUREKA_DEFAULT_ZONE:http://eureka-service:8762/eureka/}
   instance:
     prefer-ip-address: true
     instance-id: ${HOSTNAME}:${server.port}
