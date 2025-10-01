@@ -69,7 +69,8 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     serviceUrl:
-      defaultZone: ${EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE:http://eureka-service:8762/eureka/}
+#      defaultZone: ${EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE:http://eureka-service:8762/eureka/} //TODO Почему не работает ?!
+      defaultZone: http://164.92.247.120:8761/
   instance:
     prefer-ip-address: true
     instance-id: ${HOSTNAME}:${server.port}
