@@ -30,7 +30,10 @@ spring:
 
 eureka:
   client:
-    enabled: false
+    register-with-eureka: true
+    fetch-registry: true
+    serviceUrl:
+      defaultZone: http://164.92.247.120:8761/eureka/
 
 # Бизнес-топики
 kafka:
