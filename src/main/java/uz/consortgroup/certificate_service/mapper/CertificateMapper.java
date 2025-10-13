@@ -5,6 +5,8 @@ import org.springframework.stereotype.Component;
 import uz.consortgroup.certificate_service.dto.CertificateDto;
 import uz.consortgroup.certificate_service.entity.Certificate;
 
+import java.time.Instant;
+
 @Log4j2
 @Component
 public class CertificateMapper {
@@ -31,6 +33,7 @@ public class CertificateMapper {
                 .listenerFullName(entity.getListenerFullName())
                 .courseId(entity.getCourseId())
                 .courseName(entity.getCourseName())
+                .issuedDate(entity.getIssuedDate().toString())
                 .uploadPath(entity.getUploadPath())
                 .certificateTemplate(entity.getCertificateTemplate())
                 .build();
